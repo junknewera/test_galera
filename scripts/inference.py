@@ -2,6 +2,7 @@ import argparse
 import pandas as pd
 from pytorch_tabnet.tab_model import TabNetClassifier
 from scripts.utils import merge_frames, feature_engineering, final_columns
+import joblib
 
 
 def load_model(model_path: str) -> TabNetClassifier:
@@ -30,6 +31,8 @@ def infer(
     preds = model.predict(X)
 
     # Сохраняем результат
+    encoder = joblib.load("models/label_encoder.pkl")
+    preds = encoder.inverse_transform(preds)
     df_fe["predicted_cus_class"] = preds
     df_fe[["date", "predicted_cus_class"]].to_csv(output_path, index=False)
 
