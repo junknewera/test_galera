@@ -88,16 +88,6 @@ def feature_engineering(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def prepare_features_and_target(
-    df: pd.DataFrame, target_col: str = "cus_class"
-) -> Tuple[np.ndarray, np.ndarray, LabelEncoder]:
-    X = df[final_columns].values
-    y = df[target_col].astype(int).values
-    le = LabelEncoder()
-    y_encoded = le.fit_transform(y)
-    return X, y_encoded, le
-
-
 def get_class_weights(y_encoded: np.ndarray) -> torch.Tensor:
     weights = compute_class_weight(
         "balanced", classes=np.unique(y_encoded), y=y_encoded
